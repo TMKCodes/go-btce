@@ -243,6 +243,18 @@ func (this *btcePrivate) Trade(Pair string, Type string, Rate float64, Amount fl
 	data := url.Values{};
 	data.Add("method", "Trade");
 	data.Add("nonce", strconv.Itoa(int(time.Now().Unix())));
+	if Pair == nil {
+		return nil, errors.New("Pair is obligatory parameter.");
+	}
+	if Type == nil {
+		return nil, errors.New("Type is obligatory parameter.");
+	}
+	if Rate == nil {
+		return nil, errors.New("Rate is obligatory parameter.");
+	}
+	if Amount == nil {
+		return nil, errors.New("Amount is obligatory parameter.");
+	}
 	data.Add("pair", Pair);
 	data.Add("type", Type);
 	data.Add("rate", strconv.FormatFloat(Rate, 'f', 6, 32));
@@ -264,11 +276,14 @@ func (this *btcePrivate) Trade(Pair string, Type string, Rate float64, Amount fl
 	return trade, nil;
 }
 
-func (this *btcePrivate) CancelOrder(Order int) (*cancelOrder, error) {
+func (this *btcePrivate) CancelOrder(OrderID int) (*cancelOrder, error) {
 	data := url.Values{};
 	data.Add("method", "CancelOrder");
 	data.Add("nonce", strconv.Itoa(int(time.Now().Unix())));
-	data.Add("order_id", strconv.Itoa(Order));
+	if OrderID == nil {
+		return nil, errors.New("OrderID is obligatory parameter.");
+	}
+	data.Add("order_id", strconv.Itoa(OrderID));
 	response, err := this.Client.Request(data);
 	defer response.Body.Close();
 	if err != nil {
