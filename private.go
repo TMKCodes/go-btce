@@ -8,8 +8,8 @@ import (
 	"encoding/json"
 )
 
-type btce struct {
-	Client *client
+type btcePrivate struct {
+	Client *clientTLS
 }
 
 type info struct {
@@ -100,13 +100,13 @@ type cancelOrderReturn struct {
 	Funds infoFunds `json:"funds"`
 }
 
-func New(public string, private string) *btce {
+func New(public string, private string) *btcePrivate {
 	client := NewClient(public, private);
-	return &btce{client};
+	return &btcePrivate{client};
 }
 
 
-func (this *btce) getInfo() (*info, error) {
+func (this *btcePrivate) getInfo() (*info, error) {
 	data := url.Values{};
 	data.Add("method", "getInfo");
 	data.Add("nonce", strconv.Itoa(int(time.Now().Unix())));
@@ -127,7 +127,7 @@ func (this *btce) getInfo() (*info, error) {
 	return info, nil;
 }
 
-func (this *btce) TransHistory() (*transHistory, error) {
+func (this *btcePrivate) TransHistory() (*transHistory, error) {
 	data := url.Values{};
 	data.Add("method", "TransHistory");
 	data.Add("nonce", strconv.Itoa(int(time.Now().Unix())));
@@ -148,7 +148,7 @@ func (this *btce) TransHistory() (*transHistory, error) {
 	return transHistory, nil;
 }
 
-func (this *btce) TradeHistory() (*tradeHistory, error) {
+func (this *btcePrivate) TradeHistory() (*tradeHistory, error) {
 	data := url.Values{};
 	data.Add("method", "TradeHistory");
 	data.Add("nonce", strconv.Itoa(int(time.Now().Unix())));
@@ -169,7 +169,7 @@ func (this *btce) TradeHistory() (*tradeHistory, error) {
 	return tradeHistory, nil;
 }
 
-func (this *btce) Trade(Pair string, Type string, Rate float64, Amount float64) (*trade, error) {
+func (this *btcePrivate) Trade(Pair string, Type string, Rate float64, Amount float64) (*trade, error) {
 	data := url.Values{};
 	data.Add("method", "Trade");
 	data.Add("nonce", strconv.Itoa(int(time.Now().Unix())));
@@ -194,7 +194,7 @@ func (this *btce) Trade(Pair string, Type string, Rate float64, Amount float64) 
 	return trade, nil;
 }
 
-func (this *btce) CancelOrder(Order int) (*cancelOrder, error) {
+func (this *btcePrivate) CancelOrder(Order int) (*cancelOrder, error) {
 	data := url.Values{};
 	data.Add("method", "CancelOrder");
 	data.Add("nonce", strconv.Itoa(int(time.Now().Unix())));

@@ -15,23 +15,23 @@ const (
 	TRADE_API_ENDPOINT = "https://btc-e.com/tapi"
 )
 
-type client struct {
+type clientTLS struct {
 	public string
 	secret string
 }
 
-func NewClient(public string, secret string) (c *client) {
-	return &client{public, secret};
+func NewClient(public string, secret string) (c *clientTLS) {
+	return &clientTLS{public, secret};
 }
 
 
-func (this *client) HMAC_SHA512(secret string, message string) string {
+func (this *clientTLS) HMAC_SHA512(secret string, message string) string {
 	hash := hmac.New(sha512.New, []byte(secret));
 	hash.Write([]byte(message));
 	return strings.ToLower(hex.EncodeToString(hash.Sum(nil)));
 }
 
-func (this *client) Request(data url.Values) (*http.Response, error) {
+func (this *clientTLS) Request(data url.Values) (*http.Response, error) {
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true },
 	};
