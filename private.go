@@ -214,6 +214,31 @@ func (this *btcePrivate) TradeHistory(From int, Count int, FromID int, EndID int
 	return tradeHistory, nil;
 }
 
+func (this *btcePrivate) ActiveOrders(Pair string) (*activeOrders, error) {
+	data := url.Values{};
+	data.Add("method", "Trade");
+	data.Add("nonce", strconv.Itoa(int(time.Now().Unix())));
+	if Pair != nil {
+		data.Add("pair", Pair);
+	}
+	response, err := this.Client.Request(data);
+	defer response.Body.Close();
+	if err != nil {
+		return nil, err;
+	}
+	body, err := ioutil.ReadAll(response.Body);
+	if err != nil {
+		return nil, err;
+	}
+	activeOrders := new(activeOrders);
+	err = json.Unmarshal([]byte(body), &activeOrders);
+	if err != nil {
+		return nil, err;
+	}
+	return activeOrders, nil;
+
+}
+
 func (this *btcePrivate) Trade(Pair string, Type string, Rate float64, Amount float64) (*trade, error) {
 	data := url.Values{};
 	data.Add("method", "Trade");
