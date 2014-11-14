@@ -1,4 +1,12 @@
-go-btce
+Go-btce
 =======
 
-Go binding for the btc-e crypto-currency exchange API.
+Go-btce is an implementation of the [btc-e.com](https://btc-e.com) API (public and private) in Go.
+
+This version implements the version 2 [btc-e.com](https://btc-e.com) API.
+
+## Import
+
+	import "github.com/TMKCodes/go-btce"
+
+
