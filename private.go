@@ -169,10 +169,34 @@ func (this *btcePrivate) TransHistory(From int, Count int, FromID int, EndID int
 	return transHistory, nil;
 }
 
-func (this *btcePrivate) TradeHistory() (*tradeHistory, error) {
+func (this *btcePrivate) TradeHistory(From int, Count int, FromID int, EndID int, Order string, Since string, End string, Pair string) (*tradeHistory, error) {
 	data := url.Values{};
 	data.Add("method", "TradeHistory");
 	data.Add("nonce", strconv.Itoa(int(time.Now().Unix())));
+	if From != nil {
+		data.Add("from", strconv.Itoa(From));
+	}
+	if Count != nil {
+		data.Add("count", strconv.Itoa(Count));
+	}
+	if FromID != nil {
+		data.Add("from_id", strconv.Itoa(FromID));
+	}
+	if EndID != nil {
+		data.Add("end_id", strconv.Itoa(EndID));
+	}
+	if Order != nil {
+		data.Add("order", Order);
+	}
+	if Since != nil {
+		data.Add("since", Since);
+	}
+	if End != nil {
+		data.Add("end", End);
+	}
+	if Pair != nil {
+		data.Add("pair", Pair);
+	}
 	response, err := this.Client.Request(data);
 	defer response.Body.Close();
 	if err != nil {
