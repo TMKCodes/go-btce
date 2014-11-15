@@ -16,7 +16,7 @@ This version implements the version 2 [btc-e.com](https://btc-e.com) API.
 
 
 ## Example
-```Go
+```go
 package main
 import (
 "fmt"
