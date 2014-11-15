@@ -123,7 +123,7 @@ func NewPrivate(public string, private string) *btcePrivate {
 }
 
 
-func (this *btcePrivate) getInfo() (*info, error) {
+func (this *btcePrivate) GetInfo() (*info, error) {
 	data := url.Values{};
 	data.Add("method", "getInfo");
 	data.Add("nonce", strconv.Itoa(int(time.Now().Unix())));
