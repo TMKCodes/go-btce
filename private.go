@@ -90,6 +90,23 @@ type tradeReturn struct {
 	Funds infoFunds `json:"funds"`
 }
 
+type activeOrders struct {
+	Success int `json:"success"`
+	Return activeOrdersReturn `json:"return"`
+}
+
+type activeOrdersReturn map[string]activeOrdersOrder;
+
+type activeOrdersOrder struct {
+	Pair string `json:"pair"`
+	Type string `json:"type"`
+	Amount float32 `json:"amount"`
+	Rate float32 `json:"rate"`
+	OrderID int `json:"order_id"`
+	TimestampCreated int `json:"timestamp_created"`
+	Status int `json:"status"`
+}
+
 type cancelOrder struct {
 	Success int `json:"success"`
 	Return cancelOrderReturn `json:"return"`
@@ -100,8 +117,8 @@ type cancelOrderReturn struct {
 	Funds infoFunds `json:"funds"`
 }
 
-func New(public string, private string) *btcePrivate {
-	client := NewClient(public, private);
+func NewPrivate(public string, private string) *btcePrivate {
+	client := NewClient(public, private, true);
 	return &btcePrivate{client};
 }
 
@@ -110,7 +127,7 @@ func (this *btcePrivate) getInfo() (*info, error) {
 	data := url.Values{};
 	data.Add("method", "getInfo");
 	data.Add("nonce", strconv.Itoa(int(time.Now().Unix())));
-	response, err := this.Client.Request(data);
+	response, err := this.Client.Request(data, "");
 	defer response.Body.Close();
 	if err != nil {
 		return nil, err;
@@ -131,28 +148,14 @@ func (this *btcePrivate) TransHistory(From int, Count int, FromID int, EndID int
 	data := url.Values{};
 	data.Add("method", "TransHistory");
 	data.Add("nonce", strconv.Itoa(int(time.Now().Unix())));
-	if From != nil {
-		data.Add("from", strconv.Itoa(From));
-	}
-	if Count != nil {
-		data.Add("count", strconv.Itoa(Count));
-	}
-	if FromID != nil {
-		data.Add("from_id", strconv.Itoa(FromID));
-	}
-	if EndID != nil {
-		data.Add("end_id", strconv.Itoa(EndID));
-	}
-	if Order != nil {
-		data.Add("order", Order);
-	}
-	if Since != nil {
-		data.Add("since", Since);
-	}
-	if End != nil {
-		data.Add("end", End);
-	}
-	response, err := this.Client.Request(data);
+	data.Add("from", strconv.Itoa(From));
+	data.Add("count", strconv.Itoa(Count));
+	data.Add("from_id", strconv.Itoa(FromID));
+	data.Add("end_id", strconv.Itoa(EndID));
+	data.Add("order", Order);
+	data.Add("since", Since);
+	data.Add("end", End);
+	response, err := this.Client.Request(data, "");
 	defer response.Body.Close();
 	if err != nil {
 		return nil, err;
@@ -173,31 +176,15 @@ func (this *btcePrivate) TradeHistory(From int, Count int, FromID int, EndID int
 	data := url.Values{};
 	data.Add("method", "TradeHistory");
 	data.Add("nonce", strconv.Itoa(int(time.Now().Unix())));
-	if From != nil {
-		data.Add("from", strconv.Itoa(From));
-	}
-	if Count != nil {
-		data.Add("count", strconv.Itoa(Count));
-	}
-	if FromID != nil {
-		data.Add("from_id", strconv.Itoa(FromID));
-	}
-	if EndID != nil {
-		data.Add("end_id", strconv.Itoa(EndID));
-	}
-	if Order != nil {
-		data.Add("order", Order);
-	}
-	if Since != nil {
-		data.Add("since", Since);
-	}
-	if End != nil {
-		data.Add("end", End);
-	}
-	if Pair != nil {
-		data.Add("pair", Pair);
-	}
-	response, err := this.Client.Request(data);
+	data.Add("from", strconv.Itoa(From));
+	data.Add("count", strconv.Itoa(Count));
+	data.Add("from_id", strconv.Itoa(FromID));
+	data.Add("end_id", strconv.Itoa(EndID));
+	data.Add("order", Order);
+	data.Add("since", Since);
+	data.Add("end", End);
+	data.Add("pair", Pair);
+	response, err := this.Client.Request(data, "");
 	defer response.Body.Close();
 	if err != nil {
 		return nil, err;
@@ -218,10 +205,8 @@ func (this *btcePrivate) ActiveOrders(Pair string) (*activeOrders, error) {
 	data := url.Values{};
 	data.Add("method", "Trade");
 	data.Add("nonce", strconv.Itoa(int(time.Now().Unix())));
-	if Pair != nil {
-		data.Add("pair", Pair);
-	}
-	response, err := this.Client.Request(data);
+	data.Add("pair", Pair);
+	response, err := this.Client.Request(data, "");
 	defer response.Body.Close();
 	if err != nil {
 		return nil, err;
@@ -243,23 +228,11 @@ func (this *btcePrivate) Trade(Pair string, Type string, Rate float64, Amount fl
 	data := url.Values{};
 	data.Add("method", "Trade");
 	data.Add("nonce", strconv.Itoa(int(time.Now().Unix())));
-	if Pair == nil {
-		return nil, errors.New("Pair is obligatory parameter.");
-	}
-	if Type == nil {
-		return nil, errors.New("Type is obligatory parameter.");
-	}
-	if Rate == nil {
-		return nil, errors.New("Rate is obligatory parameter.");
-	}
-	if Amount == nil {
-		return nil, errors.New("Amount is obligatory parameter.");
-	}
 	data.Add("pair", Pair);
 	data.Add("type", Type);
 	data.Add("rate", strconv.FormatFloat(Rate, 'f', 6, 32));
 	data.Add("amount", strconv.FormatFloat(Amount, 'f', 6, 32));
-	response, err := this.Client.Request(data);
+	response, err := this.Client.Request(data, "");
 	defer response.Body.Close();
 	if err != nil {
 		return nil, err;
@@ -280,11 +253,8 @@ func (this *btcePrivate) CancelOrder(OrderID int) (*cancelOrder, error) {
 	data := url.Values{};
 	data.Add("method", "CancelOrder");
 	data.Add("nonce", strconv.Itoa(int(time.Now().Unix())));
-	if OrderID == nil {
-		return nil, errors.New("OrderID is obligatory parameter.");
-	}
 	data.Add("order_id", strconv.Itoa(OrderID));
-	response, err := this.Client.Request(data);
+	response, err := this.Client.Request(data, "");
 	defer response.Body.Close();
 	if err != nil {
 		return nil, err;
