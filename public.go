@@ -18,11 +18,11 @@ type fee struct {
 	Trade float64 `json:"trade"`
 }
 
-type ticker struct {
-	Ticker tickerTicker `json:"ticker"`
+type tmpTicker struct {
+	Ticker ticker `json:"ticker"`
 }
 
-type tickerTicker struct {
+type ticker struct {
 	High float64 `json:"high"`
 	Low float64 `json:"low"`
 	Avg float64 `json:"avg"`
@@ -35,7 +35,7 @@ type tickerTicker struct {
 	ServerTime int `json:"server_time"`
 }
 
-type trades map[string]tradesTrade;
+type trades []tradesTrade;
 
 type tradesTrade struct {
 	Date int `json:"data"`
@@ -90,12 +90,12 @@ func (this *btcePublic) Ticker(pair string) (*ticker, error) {
 	if err != nil {
 		return nil, err;
 	}
-	ticker := new(ticker);
-	err = json.Unmarshal([]byte(body), &ticker);
+	tmpTicker := new(tmpTicker);
+	err = json.Unmarshal([]byte(body), &tmpTicker);
 	if err != nil {
 		return nil, err;
 	}
-	return ticker, nil;
+	return &tmpTicker.Ticker, nil;
 }
 
 
@@ -121,7 +121,7 @@ func (this *btcePublic) Trades(pair string) (*trades, error) {
 
 func (this *btcePublic) Depth(pair string) (*depth, error) {
 	data := url.Values{};
-	location := PUBLIC_API_ENDPOINT + pair + "/trades";
+	location := PUBLIC_API_ENDPOINT + pair + "/depth";
 	response, err := this.Client.Request(data, location);
 	defer response.Body.Close();
 	if err != nil {

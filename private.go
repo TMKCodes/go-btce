@@ -32,17 +32,17 @@ type infoRights struct {
 }
 
 type infoFunds struct {
-	USD int `json:"usd"`
-	BTC int `json:"btc"`
-	LTC int `json:"ltc"`
-	NMC int `json:"nmc"`
-	RUR int `json:"rur"`
-	EUR int `json:"eur"`
-	NVC int `json:"nvc"`
-	TRC int `json:"trc"`
-	PPC int `json:"ppc"`
-	FTC int `json:"ftc"`
-	XPM int `json:"xpm"`
+	USD float64 `json:"usd"`
+	BTC float64 `json:"btc"`
+	LTC float64 `json:"ltc"`
+	NMC float64 `json:"nmc"`
+	RUR float64 `json:"rur"`
+	EUR float64 `json:"eur"`
+	NVC float64 `json:"nvc"`
+	TRC float64 `json:"trc"`
+	PPC float64 `json:"ppc"`
+	FTC float64 `json:"ftc"`
+	XPM float64 `json:"xpm"`
 }
 
 type transHistory struct {
