@@ -54,7 +54,7 @@ type TransHistoryReturn map[string]TransHistoryTransaction;
 
 type TransHistoryTransaction struct {
 	Type int `json:"type"`
-	Amount float32 `json:"amount"`
+	Amount float64 `json:"amount"`
 	Currency string `json:"currency"`
 	Desc string `json:"desc"`
 	Status int `json:"status"`
@@ -71,8 +71,8 @@ type TradeHistoryReturn map[string]TradeHistoryTrade;
 type TradeHistoryTrade struct {
 	Pair string `json:"pair"`
 	Type string `json:"type"`
-	Amount float32 `json:"amount"`
-	Rate float32 `json:"rate"`
+	Amount float64 `json:"amount"`
+	Rate float64 `json:"rate"`
 	OrderID int `json:"order_id"`
 	IsYourOrder int `json:"is_your_order"`
 	Timestamp int `json:"timestamp"`
@@ -84,8 +84,8 @@ type Trade struct {
 }
 
 type TradeReturn struct {
-	Received float32 `json:"received"`
-	Remains float32 `json:"remains"`
+	Received float64 `json:"received"`
+	Remains float64 `json:"remains"`
 	Order int `json:"order_id"`
 	Funds InfoFunds `json:"funds"`
 }
@@ -100,8 +100,8 @@ type ActiveOrdersReturn map[string]ActiveOrdersOrder;
 type ActiveOrdersOrder struct {
 	Pair string `json:"pair"`
 	Type string `json:"type"`
-	Amount float32 `json:"amount"`
-	Rate float32 `json:"rate"`
+	Amount float64 `json:"amount"`
+	Rate float64 `json:"rate"`
 	OrderID int `json:"order_id"`
 	TimestampCreated int `json:"timestamp_created"`
 	Status int `json:"status"`
