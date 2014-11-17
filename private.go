@@ -12,26 +12,26 @@ type btcePrivate struct {
 	Client *clientTLS
 }
 
-type info struct {
+type Info struct {
 	Success int `json:"success"`
-	Return infoReturn `json:"return"`
+	Return InfoReturn `json:"return"`
 }
 
-type infoReturn struct {
-	Funds infoFunds `json:"funds"`
-	Rights infoRights `json:"rights"`
-	TransactionsCount int `json:"transaction_count"`
+type InfoReturn struct {
+	Funds InfoFunds `json:"funds"`
+	Rights InfoRights `json:"rights"`
+	TransactionsCount int `json:"Transaction_count"`
 	OpenOrders int `json:"open_orders"`
 	Time int `json:"server_time"`
 }
 
-type infoRights struct {
-	Info int `json:"info"`
-	Trade int `json:"trade"`
+type InfoRights struct {
+	Info int `json:"Info"`
+	Trade int `json:"Trade"`
 	Withdraw int `json:"withdraw"`
 }
 
-type infoFunds struct {
+type InfoFunds struct {
 	USD float64 `json:"usd"`
 	BTC float64 `json:"btc"`
 	LTC float64 `json:"ltc"`
@@ -45,14 +45,14 @@ type infoFunds struct {
 	XPM float64 `json:"xpm"`
 }
 
-type transHistory struct {
+type TransHistory struct {
 	Success int `json:"success"`
-	Return transHistoryReturn `json:"return"`
+	Return TransHistoryReturn `json:"return"`
 }
 
-type transHistoryReturn map[string]transHistoryTransaction;
+type TransHistoryReturn map[string]TransHistoryTransaction;
 
-type transHistoryTransaction struct {
+type TransHistoryTransaction struct {
 	Type int `json:"type"`
 	Amount float32 `json:"amount"`
 	Currency string `json:"currency"`
@@ -61,14 +61,14 @@ type transHistoryTransaction struct {
 	Timestamp int `json:"timestamp"`
 }
 
-type tradeHistory struct {
+type TradeHistory struct {
 	Success int `json:"success"`
-	Return tradeHistoryReturn `json:"return"`
+	Return TradeHistoryReturn `json:"return"`
 }
 
-type tradeHistoryReturn map[string]tradeHistoryTrade;
+type TradeHistoryReturn map[string]TradeHistoryTrade;
 
-type tradeHistoryTrade struct {
+type TradeHistoryTrade struct {
 	Pair string `json:"pair"`
 	Type string `json:"type"`
 	Amount float32 `json:"amount"`
@@ -78,26 +78,26 @@ type tradeHistoryTrade struct {
 	Timestamp int `json:"timestamp"`
 }
 
-type trade struct {
+type Trade struct {
 	Success int `json:"success"`
-	Return tradeReturn `json:"return"`
+	Return TradeReturn `json:"return"`
 }
 
-type tradeReturn struct {
+type TradeReturn struct {
 	Received float32 `json:"received"`
 	Remains float32 `json:"remains"`
 	Order int `json:"order_id"`
-	Funds infoFunds `json:"funds"`
+	Funds InfoFunds `json:"funds"`
 }
 
-type activeOrders struct {
+type ActiveOrders struct {
 	Success int `json:"success"`
-	Return activeOrdersReturn `json:"return"`
+	Return ActiveOrdersReturn `json:"return"`
 }
 
-type activeOrdersReturn map[string]activeOrdersOrder;
+type ActiveOrdersReturn map[string]ActiveOrdersOrder;
 
-type activeOrdersOrder struct {
+type ActiveOrdersOrder struct {
 	Pair string `json:"pair"`
 	Type string `json:"type"`
 	Amount float32 `json:"amount"`
@@ -107,14 +107,14 @@ type activeOrdersOrder struct {
 	Status int `json:"status"`
 }
 
-type cancelOrder struct {
+type CancelOrder struct {
 	Success int `json:"success"`
-	Return cancelOrderReturn `json:"return"`
+	Return CancelOrderReturn `json:"return"`
 }
 
-type cancelOrderReturn struct {
+type CancelOrderReturn struct {
 	OrderID int `json:"order_id"`
-	Funds infoFunds `json:"funds"`
+	Funds InfoFunds `json:"funds"`
 }
 
 func NewPrivate(public string, private string) *btcePrivate {
@@ -123,7 +123,7 @@ func NewPrivate(public string, private string) *btcePrivate {
 }
 
 
-func (this *btcePrivate) GetInfo() (*info, error) {
+func (this *btcePrivate) GetInfo() (*Info, error) {
 	data := url.Values{};
 	data.Add("method", "getInfo");
 	data.Add("nonce", strconv.Itoa(int(time.Now().Unix())));
@@ -136,15 +136,15 @@ func (this *btcePrivate) GetInfo() (*info, error) {
 	if err != nil {
 		return nil, err;
 	}
-	info := new(info);
-	err = json.Unmarshal([]byte(body), &info);
+	Info := new(Info);
+	err = json.Unmarshal([]byte(body), &Info);
 	if err != nil {
 		return nil, err;
 	}
-	return info, nil;
+	return Info, nil;
 }
 
-func (this *btcePrivate) TransHistory(From int, Count int, FromID int, EndID int, Order string, Since string, End string) (*transHistory, error) {
+func (this *btcePrivate) TransHistory(From int, Count int, FromID int, EndID int, Order string, Since string, End string) (*TransHistory, error) {
 	data := url.Values{};
 	data.Add("method", "TransHistory");
 	data.Add("nonce", strconv.Itoa(int(time.Now().Unix())));
@@ -164,15 +164,15 @@ func (this *btcePrivate) TransHistory(From int, Count int, FromID int, EndID int
 	if err != nil {
 		return nil, err;
 	}
-	transHistory := new(transHistory);
-	err = json.Unmarshal([]byte(body), &transHistory);
+	TransHistory := new(TransHistory);
+	err = json.Unmarshal([]byte(body), &TransHistory);
 	if err != nil {
 		return nil, err;
 	}
-	return transHistory, nil;
+	return TransHistory, nil;
 }
 
-func (this *btcePrivate) TradeHistory(From int, Count int, FromID int, EndID int, Order string, Since string, End string, Pair string) (*tradeHistory, error) {
+func (this *btcePrivate) TradeHistory(From int, Count int, FromID int, EndID int, Order string, Since string, End string, Pair string) (*TradeHistory, error) {
 	data := url.Values{};
 	data.Add("method", "TradeHistory");
 	data.Add("nonce", strconv.Itoa(int(time.Now().Unix())));
@@ -193,15 +193,37 @@ func (this *btcePrivate) TradeHistory(From int, Count int, FromID int, EndID int
 	if err != nil {
 		return nil, err;
 	}
-	tradeHistory := new(tradeHistory);
-	err = json.Unmarshal([]byte(body), &tradeHistory);
+	TradeHistory := new(TradeHistory);
+	err = json.Unmarshal([]byte(body), &TradeHistory);
 	if err != nil {
 		return nil, err;
 	}
-	return tradeHistory, nil;
+	return TradeHistory, nil;
 }
 
-func (this *btcePrivate) ActiveOrders(Pair string) (*activeOrders, error) {
+func (this *btcePrivate) TradeHistoryDefault(Pair string) (*TradeHistory, error) {
+	data := url.Values{};
+	data.Add("method", "TradeHistory");
+	data.Add("nonce", strconv.Itoa(int(time.Now().Unix())));
+	data.Add("pair", Pair);
+	response, err := this.Client.Request(data, "");
+	defer response.Body.Close();
+	if err != nil {
+		return nil, err;
+	}
+	body, err := ioutil.ReadAll(response.Body);
+	if err != nil {
+		return nil, err;
+	}
+	TradeHistory := new(TradeHistory);
+	err = json.Unmarshal([]byte(body), &TradeHistory);
+	if err != nil {
+		return nil, err;
+	}
+	return TradeHistory, nil;
+}
+
+func (this *btcePrivate) ActiveOrders(Pair string) (*ActiveOrders, error) {
 	data := url.Values{};
 	data.Add("method", "Trade");
 	data.Add("nonce", strconv.Itoa(int(time.Now().Unix())));
@@ -215,16 +237,16 @@ func (this *btcePrivate) ActiveOrders(Pair string) (*activeOrders, error) {
 	if err != nil {
 		return nil, err;
 	}
-	activeOrders := new(activeOrders);
-	err = json.Unmarshal([]byte(body), &activeOrders);
+	ActiveOrders := new(ActiveOrders);
+	err = json.Unmarshal([]byte(body), &ActiveOrders);
 	if err != nil {
 		return nil, err;
 	}
-	return activeOrders, nil;
+	return ActiveOrders, nil;
 
 }
 
-func (this *btcePrivate) Trade(Pair string, Type string, Rate float64, Amount float64) (*trade, error) {
+func (this *btcePrivate) Trade(Pair string, Type string, Rate float64, Amount float64) (*Trade, error) {
 	data := url.Values{};
 	data.Add("method", "Trade");
 	data.Add("nonce", strconv.Itoa(int(time.Now().Unix())));
@@ -241,15 +263,15 @@ func (this *btcePrivate) Trade(Pair string, Type string, Rate float64, Amount fl
 	if err != nil {
 		return nil, err;
 	}
-	trade := new(trade);
-	err = json.Unmarshal([]byte(body), &trade);
+	Trade := new(Trade);
+	err = json.Unmarshal([]byte(body), &Trade);
 	if err != nil {
 		return nil, err;
 	}
-	return trade, nil;
+	return Trade, nil;
 }
 
-func (this *btcePrivate) CancelOrder(OrderID int) (*cancelOrder, error) {
+func (this *btcePrivate) CancelOrder(OrderID int) (*CancelOrder, error) {
 	data := url.Values{};
 	data.Add("method", "CancelOrder");
 	data.Add("nonce", strconv.Itoa(int(time.Now().Unix())));
@@ -263,11 +285,11 @@ func (this *btcePrivate) CancelOrder(OrderID int) (*cancelOrder, error) {
 	if err != nil {
 		return nil, err;
 	}
-	cancelOrder := new(cancelOrder);
-	err = json.Unmarshal([]byte(body), &cancelOrder);
+	CancelOrder := new(CancelOrder);
+	err = json.Unmarshal([]byte(body), &CancelOrder);
 	if err != nil {
 		return nil, err;
 	}
-	return cancelOrder, nil;
+	return CancelOrder, nil;
 
 }

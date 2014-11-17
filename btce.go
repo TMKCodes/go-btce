@@ -11,42 +11,46 @@ func New(public string, secret string) *btce {
 	return &btce{pub, priv};
 }
 
-func (this *btce) GetInfo() (*info, error) {
+func (this *btce) GetInfo() (*Info, error) {
 	return this.Private.GetInfo();
 }
 
-func (this *btce) TransHistory(From int, Count int, FromID int, EndID int, Order string, Since string, End string) (*transHistory, error) {
+func (this *btce) TransHistory(From int, Count int, FromID int, EndID int, Order string, Since string, End string) (*TransHistory, error) {
 	return this.Private.TransHistory(From, Count, FromID, EndID, Order, Since, End);
 }
 
-func (this *btce) TradeHistory(From int, Count int, FromID int, EndID int, Order string, Since string, End string, Pair string) (*tradeHistory, error) {
+func (this *btce) TradeHistory(From int, Count int, FromID int, EndID int, Order string, Since string, End string, Pair string) (*TradeHistory, error) {
 	return this.Private.TradeHistory(From, Count, FromID, EndID, Order, Since, End, Pair);
 }
 
-func (this *btce) ActiveOrders(Pair string) (*activeOrders, error) {
+func (this *btce) TradeHistoryDefault(Pair string) (*TradeHistory, error) {
+	return this.Private.TradeHistoryDefault(Pair);
+}
+
+func (this *btce) ActiveOrders(Pair string) (*ActiveOrders, error) {
 	return this.Private.ActiveOrders(Pair);
 }
 
-func (this *btce) Trade(Pair string, Type string, Rate float64, Amount float64) (*trade, error) {
+func (this *btce) Trade(Pair string, Type string, Rate float64, Amount float64) (*Trade, error) {
 	return this.Private.Trade(Pair, Type, Rate, Amount);
 }
 
-func (this *btce) CancelOrder(OrderID int) (*cancelOrder, error) {
+func (this *btce) CancelOrder(OrderID int) (*CancelOrder, error) {
 	return this.Private.CancelOrder(OrderID);
 }
 
-func (this *btce) Fee(Pair string) (*fee, error) {
+func (this *btce) Fee(Pair string) (*Fee, error) {
 	return this.Public.Fee(Pair);
 }
 
-func (this *btce) Ticker(Pair string) (*ticker, error) {
+func (this *btce) Ticker(Pair string) (*Ticker, error) {
 	return this.Public.Ticker(Pair);
 }
 
-func (this *btce) Trades(Pair string) (*trades, error) {
+func (this *btce) Trades(Pair string) (*Trades, error) {
 	return this.Public.Trades(Pair);
 }
 
-func (this *btce) Depth(Pair string) (*depth, error) {
+func (this *btce) Depth(Pair string) (*Depth, error) {
 	return this.Public.Depth(Pair);
 }
