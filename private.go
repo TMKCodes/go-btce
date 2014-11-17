@@ -15,6 +15,7 @@ type btcePrivate struct {
 type Info struct {
 	Success int `json:"success"`
 	Return InfoReturn `json:"return"`
+	Error string `json:"error"`
 }
 
 type InfoReturn struct {
@@ -48,6 +49,7 @@ type InfoFunds struct {
 type TransHistory struct {
 	Success int `json:"success"`
 	Return TransHistoryReturn `json:"return"`
+	Error string `json:"error"`
 }
 
 type TransHistoryReturn map[string]TransHistoryTransaction;
@@ -64,6 +66,7 @@ type TransHistoryTransaction struct {
 type TradeHistory struct {
 	Success int `json:"success"`
 	Return TradeHistoryReturn `json:"return"`
+	Error string `json:"error"`
 }
 
 type TradeHistoryReturn map[string]TradeHistoryTrade;
@@ -81,6 +84,7 @@ type TradeHistoryTrade struct {
 type Trade struct {
 	Success int `json:"success"`
 	Return TradeReturn `json:"return"`
+	Error string `json:"error"`
 }
 
 type TradeReturn struct {
@@ -93,6 +97,7 @@ type TradeReturn struct {
 type ActiveOrders struct {
 	Success int `json:"success"`
 	Return ActiveOrdersReturn `json:"return"`
+	Error string `json:"error"`
 }
 
 type ActiveOrdersReturn map[string]ActiveOrdersOrder;
@@ -110,6 +115,7 @@ type ActiveOrdersOrder struct {
 type CancelOrder struct {
 	Success int `json:"success"`
 	Return CancelOrderReturn `json:"return"`
+	Error string `json:"error"`
 }
 
 type CancelOrderReturn struct {
@@ -252,8 +258,8 @@ func (this *btcePrivate) Trade(Pair string, Type string, Rate float64, Amount fl
 	data.Add("nonce", strconv.Itoa(int(time.Now().Unix())));
 	data.Add("pair", Pair);
 	data.Add("type", Type);
-	data.Add("rate", strconv.FormatFloat(Rate, 'f', 6, 32));
-	data.Add("amount", strconv.FormatFloat(Amount, 'f', 6, 32));
+	data.Add("rate", strconv.FormatFloat(Rate, 'f', 5, 64));
+	data.Add("amount", strconv.FormatFloat(Amount, 'f', 8, 64));
 	response, err := this.Client.Request(data, "");
 	defer response.Body.Close();
 	if err != nil {
