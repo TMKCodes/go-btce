@@ -62,10 +62,10 @@ func (this *btcePublic) Fee(pair string) (*Fee, error) {
 	data := url.Values{};
 	location := PUBLIC_API_ENDPOINT + pair + "/fee";
 	response, err := this.Client.Request(data, location);
-	defer response.Body.Close();
 	if err != nil {
 		return nil, err;
 	}
+	defer response.Body.Close();
 	body, err := ioutil.ReadAll(response.Body);
 	if err != nil {
 		return nil, err;
@@ -82,10 +82,10 @@ func (this *btcePublic) Ticker(pair string) (*Ticker, error) {
 	data := url.Values{};
 	location := PUBLIC_API_ENDPOINT + pair + "/ticker";
 	response, err := this.Client.Request(data, location);
-	defer response.Body.Close();
 	if err != nil {
 		return nil, err;
 	}
+	defer response.Body.Close();
 	body, err := ioutil.ReadAll(response.Body);
 	if err != nil {
 		return nil, err;
@@ -103,10 +103,10 @@ func (this *btcePublic) Trades(pair string) (*Trades, error) {
 	data := url.Values{};
 	location := PUBLIC_API_ENDPOINT + pair + "/trades";
 	response, err := this.Client.Request(data, location);
-	defer response.Body.Close();
 	if err != nil {
 		return nil, err;
 	}
+	defer response.Body.Close();
 	body, err := ioutil.ReadAll(response.Body);
 	if err != nil {
 		return nil, err;
@@ -123,10 +123,10 @@ func (this *btcePublic) Depth(pair string) (*Depth, error) {
 	data := url.Values{};
 	location := PUBLIC_API_ENDPOINT + pair + "/depth";
 	response, err := this.Client.Request(data, location);
-	defer response.Body.Close();
 	if err != nil {
 		return nil, err;
 	}
+	defer response.Body.Close();
 	body, err := ioutil.ReadAll(response.Body);
 	if err != nil {
 		return nil, err;
