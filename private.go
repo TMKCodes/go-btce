@@ -134,10 +134,10 @@ func (this *btcePrivate) GetInfo() (*Info, error) {
 	data.Add("method", "getInfo");
 	data.Add("nonce", strconv.Itoa(int(time.Now().Unix())));
 	response, err := this.Client.Request(data, "");
-	defer response.Body.Close();
 	if err != nil {
 		return nil, err;
 	}
+	defer response.Body.Close();
 	body, err := ioutil.ReadAll(response.Body);
 	if err != nil {
 		return nil, err;
@@ -162,10 +162,10 @@ func (this *btcePrivate) TransHistory(From int, Count int, FromID int, EndID int
 	data.Add("since", Since);
 	data.Add("end", End);
 	response, err := this.Client.Request(data, "");
-	defer response.Body.Close();
 	if err != nil {
 		return nil, err;
 	}
+	defer response.Body.Close();
 	body, err := ioutil.ReadAll(response.Body);
 	if err != nil {
 		return nil, err;
@@ -191,10 +191,10 @@ func (this *btcePrivate) TradeHistory(From int, Count int, FromID int, EndID int
 	data.Add("end", End);
 	data.Add("pair", Pair);
 	response, err := this.Client.Request(data, "");
-	defer response.Body.Close();
 	if err != nil {
 		return nil, err;
 	}
+	defer response.Body.Close();
 	body, err := ioutil.ReadAll(response.Body);
 	if err != nil {
 		return nil, err;
@@ -213,10 +213,10 @@ func (this *btcePrivate) TradeHistoryDefault(Pair string) (*TradeHistory, error)
 	data.Add("nonce", strconv.Itoa(int(time.Now().Unix())));
 	data.Add("pair", Pair);
 	response, err := this.Client.Request(data, "");
-	defer response.Body.Close();
 	if err != nil {
 		return nil, err;
 	}
+	defer response.Body.Close();
 	body, err := ioutil.ReadAll(response.Body);
 	if err != nil {
 		return nil, err;
@@ -235,10 +235,10 @@ func (this *btcePrivate) ActiveOrders(Pair string) (*ActiveOrders, error) {
 	data.Add("nonce", strconv.Itoa(int(time.Now().Unix())));
 	data.Add("pair", Pair);
 	response, err := this.Client.Request(data, "");
-	defer response.Body.Close();
 	if err != nil {
 		return nil, err;
 	}
+	defer response.Body.Close();
 	body, err := ioutil.ReadAll(response.Body);
 	if err != nil {
 		return nil, err;
@@ -261,10 +261,10 @@ func (this *btcePrivate) Trade(Pair string, Type string, Rate float64, Amount fl
 	data.Add("rate", strconv.FormatFloat(Rate, 'f', 5, 64));
 	data.Add("amount", strconv.FormatFloat(Amount, 'f', 8, 64));
 	response, err := this.Client.Request(data, "");
-	defer response.Body.Close();
 	if err != nil {
 		return nil, err;
 	}
+	defer response.Body.Close();
 	body, err := ioutil.ReadAll(response.Body);
 	if err != nil {
 		return nil, err;
@@ -283,10 +283,10 @@ func (this *btcePrivate) CancelOrder(OrderID int) (*CancelOrder, error) {
 	data.Add("nonce", strconv.Itoa(int(time.Now().Unix())));
 	data.Add("order_id", strconv.Itoa(OrderID));
 	response, err := this.Client.Request(data, "");
-	defer response.Body.Close();
 	if err != nil {
 		return nil, err;
 	}
+	defer response.Body.Close();
 	body, err := ioutil.ReadAll(response.Body);
 	if err != nil {
 		return nil, err;
