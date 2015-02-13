@@ -23,12 +23,20 @@ func (this *Btce) TradeHistory(From int, Count int, FromID int, EndID int, Order
 	return this.Private.TradeHistory(From, Count, FromID, EndID, Order, Since, End, Pair);
 }
 
-func (this *Btce) TradeHistoryDefault(Pair string) (*TradeHistory, error) {
-	return this.Private.TradeHistoryDefault(Pair);
+func (this *Btce) OrderedTradeHistory(From int, Count int, FromID int, EndID int, Order string, Since string, End string, Pair string) (*TradeHistory, error) {
+	return this.Private.OrderedTradeHistory(From, Count, FromID, EndID, Order, Since, End, Pair);
+}
+
+func (this *Btce) LastTrade(Pair string) (*TradeHistoryTrade, error) {
+	return this.Private.LastTrade(Pair);
 }
 
 func (this *Btce) ActiveOrders(Pair string) (*ActiveOrders, error) {
 	return this.Private.ActiveOrders(Pair);
+}
+
+func (this *Btce) OrderedActiveOrders(Pair string) (*ActiveOrders, error) {
+	return this.Private.OrderedActiveOrders(Pair);
 }
 
 func (this *Btce) Trade(Pair string, Type string, Rate float64, Amount float64) (*Trade, error) {
@@ -37,6 +45,10 @@ func (this *Btce) Trade(Pair string, Type string, Rate float64, Amount float64) 
 
 func (this *Btce) CancelOrder(OrderID int) (*CancelOrder, error) {
 	return this.Private.CancelOrder(OrderID);
+}
+
+func (this *Btce) Balances(Pair string) ([]float64, error) {
+	return this.Private.Balances(Pair);
 }
 
 func (this *Btce) Fee(Pair string) (*Fee, error) {

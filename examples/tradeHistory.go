@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"sort"
 	"github.com/TMKCodes/go-btce"
 )
 
@@ -19,19 +18,18 @@ func (this ByTimestamp) Less(i, j int) bool { return this[i].Timestamp > this[j]
 
 func main() {
 	btc := btce.New(KEY, SECRET);
-	TradeHistory, err := btc.TradeHistory(0, 1000, 0, 0, "ASC", "", "", "ltc_eur");
-	if err != nil {
-		fmt.Printf("TradeHistory: %v\n", err);
-	} else {
-		temp := make([]btce.TradeHistoryTrade, 0);
-		for key, value := range TradeHistory.Return {
-			fmt.Printf("TradeHistory.Return[%#v] := %#v\n", key, value);
-			temp = append(temp, value);
-		}
-		sort.Sort(ByTimestamp(temp));
-		for i := range temp {
-			fmt.Printf("TradeHistory.Return[%v] := %#v\n", i, temp[i]);
-		}
+	TradeHistory, _ := btc.TradeHistory(0, 1000, 0, 0, "ASC", "", "", "ltc_eur");
+	fmt.Printf("TradeHistory:\n");
+	for key, value := range TradeHistory.Return {
+
+		fmt.Printf("TradeHistory.Return[%v] = %#v\n", key, value);
+	}
+	OrderedTradeHistory, _ := btc.OrderedTradeHistory(0, 1000, 0, 0, "ASC", "", "", "ltc_eur");
+	fmt.Printf("OrderedTradeHistory:\n");
+	for key, value := range OrderedTradeHistory.Return {
+		fmt.Printf("TradeHistory.Return[%v] = %#v\n", key, value);
 	}
 
+	LastTrade, _ := btc.LastTrade("ltc_eur");
+	fmt.Printf("LastTrade = %#v\n", LastTrade);
 }

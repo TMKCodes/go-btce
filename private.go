@@ -2,6 +2,7 @@ package btce
 
 import (
 	"time"
+	"sort"
 	"strconv"
 	"net/url"
 	"io/ioutil"
@@ -207,27 +208,39 @@ func (this *btcePrivate) TradeHistory(From int, Count int, FromID int, EndID int
 	return TradeHistory, nil;
 }
 
-func (this *btcePrivate) TradeHistoryDefault(Pair string) (*TradeHistory, error) {
-	data := url.Values{};
-	data.Add("method", "TradeHistory");
-	data.Add("nonce", strconv.Itoa(int(time.Now().Unix())));
-	data.Add("pair", Pair);
-	response, err := this.Client.Request(data, "");
+type ByTradeTimestamp []TradeHistoryTrade;
+
+func (this ByTradeTimestamp) Len() int { return len(this); }
+func (this ByTradeTimestamp) Swap(i, j int) { this[i], this[j] = this[j], this[i]; }
+func (this ByTradeTimestamp) Less(i, j int) bool { return this[i].Timestamp > this[j].Timestamp; }
+
+func (this *btcePrivate) OrderedTradeHistory(From int, Count int, FromID int, EndID int, Order string, Since string, End string, Pair string) (*TradeHistory, error) {
+	tradeHistory, err := this.TradeHistory(From, Count, FromID, EndID, Order, Since, End, Pair);
 	if err != nil {
 		return nil, err;
 	}
-	defer response.Body.Close();
-	body, err := ioutil.ReadAll(response.Body);
-	if err != nil {
-		return nil, err;
+	temp := make([]TradeHistoryTrade, 0);
+	for _, value := range tradeHistory.Return {
+		temp = append(temp, value);
 	}
-	TradeHistory := new(TradeHistory);
-	err = json.Unmarshal([]byte(body), &TradeHistory);
-	if err != nil {
-		return nil, err;
+	sort.Sort(ByTradeTimestamp(temp));
+	tradeHistory.Return = map[string]TradeHistoryTrade{};
+	for key, value := range temp {
+		tradeHistory.Return[strconv.Itoa(key)] = value;
 	}
-	return TradeHistory, nil;
+	return tradeHistory, nil;
 }
+
+func (this *btcePrivate) LastTrade(Pair string) (*TradeHistoryTrade, error) {
+	tradeHistory, err := this.OrderedTradeHistory(0, 1000, 0, 0, "ASC", "", "", Pair);
+	if err != nil {
+		return nil, err;
+	}
+	lastTrade := new(TradeHistoryTrade);
+	*lastTrade = tradeHistory.Return["0"]
+	return lastTrade, nil;
+}
+
 
 func (this *btcePrivate) ActiveOrders(Pair string) (*ActiveOrders, error) {
 	data := url.Values{};
@@ -250,6 +263,64 @@ func (this *btcePrivate) ActiveOrders(Pair string) (*ActiveOrders, error) {
 	}
 	return ActiveOrders, nil;
 
+}
+
+type ByActiveOrdersTimestampCreated []ActiveOrdersOrder;
+
+func (this ByActiveOrdersTimestampCreated) Len() int { return len(this); }
+func (this ByActiveOrdersTimestampCreated) Swap(i, j int) { this[i], this[j] = this[j], this[i]; }
+func (this ByActiveOrdersTimestampCreated) Less(i, j int) bool { return this[i].TimestampCreated > this[j].TimestampCreated; }
+
+func (this *btcePrivate) OrderedActiveOrders(Pair string) (*ActiveOrders, error) {
+	activeOrders, err := this.ActiveOrders(Pair);
+	if err != nil {
+		return nil, err;
+	}
+	temp := make([]ActiveOrdersOrder, 0);
+	for _, value := range activeOrders.Return {
+		temp = append(temp, value);
+	}
+	sort.Sort(ByActiveOrdersTimestampCreated(temp));
+	activeOrders.Return = map[string]ActiveOrdersOrder{};
+	for key, value := range temp {
+		activeOrders.Return[strconv.Itoa(key)] = value;
+	}
+	return activeOrders, nil;
+}
+
+func (this *btcePrivate) Balances(Pair string) ([]float64, error) {
+	info, err := this.GetInfo();
+	if err != nil {
+		return nil, err;
+	}
+	newPair := strings.Split(strings.ToUpper(Pair), "_");
+	balances := make([]float64, 2);
+	for i := 0; i < 2; i++ {
+		if newPair[i] == "USD" {
+			balances[i] = info.Return.Funds.USD;
+		} else if newPair[i] == "BTC" {
+			balances[i] = info.Return.Funds.BTC;
+		} else if newPair[i] == "LTC" {
+			balances[i] = info.Return.Funds.LTC;
+		} else if newPair[i] == "NMC" {
+			balances[i] = info.Return.Funds.NMC;
+		} else if newPair[i] == "RUR" {
+			balances[i] = info.Return.Funds.RUR;
+		} else if newPair[i] == "EUR" {
+			balances[i] = info.Return.Funds.EUR;
+		} else if newPair[i] == "NVC" {
+			balances[i] = info.Return.Funds.NVC;
+		} else if newPair[i] == "TRC" {
+			balances[i] = info.Return.Funds.TRC;
+		} else if newPair[i] == "PPC" {
+			balances[i] = info.Return.Funds.PPC;
+		} else if newPair[i] == "FTC" {
+			balances[i] = info.Return.Funds.FTC;
+		} else if newPair[i] == "XPM" {
+			balances[i] = info.Return.Funds.XPM;
+		}
+	}
+	return balances, nil;
 }
 
 func (this *btcePrivate) Trade(Pair string, Type string, Rate float64, Amount float64) (*Trade, error) {
