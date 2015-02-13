@@ -3,6 +3,7 @@ package btce
 import (
 	"time"
 	"sort"
+	"strings"
 	"strconv"
 	"net/url"
 	"io/ioutil"
