@@ -1,6 +1,7 @@
 package btce
 
 import (
+	"fmt"
 	"time"
 	"sort"
 	"strings"
