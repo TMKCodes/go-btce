@@ -330,8 +330,10 @@ func (this *btcePrivate) Trade(Pair string, Type string, Rate float64, Amount fl
 	data.Add("nonce", strconv.Itoa(int(time.Now().Unix())));
 	data.Add("pair", Pair);
 	data.Add("type", Type);
-	data.Add("rate", strconv.FormatFloat(Rate, 'f', 5, 64));
-	data.Add("amount", strconv.FormatFloat(Amount, 'f', 8, 64));
+	Rate, _  = strconv.ParseFloat(strconv.FormatFloat(Rate, 'f', 6, 64), 64);
+	data.Add("rate", fmt.Sprintf("%g", Rate));
+	Amount, _ = strconv.ParseFloat(strconv.FormatFloat(Amount, 'f', 8, 64), 64);
+	data.Add("amount", fmt.Sprintf("%g", Amount));
 	response, err := this.Client.Request(data, "");
 	if err != nil {
 		return nil, err;
