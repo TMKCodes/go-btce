@@ -246,7 +246,7 @@ func (this *btcePrivate) LastTrade(Pair string) (*TradeHistoryTrade, error) {
 
 func (this *btcePrivate) ActiveOrders(Pair string) (*ActiveOrders, error) {
 	data := url.Values{};
-	data.Add("method", "Trade");
+	data.Add("method", "ActiveOrders");
 	data.Add("nonce", strconv.Itoa(int(time.Now().Unix())));
 	data.Add("pair", Pair);
 	response, err := this.Client.Request(data, "");
