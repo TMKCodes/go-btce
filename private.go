@@ -15,7 +15,7 @@ type btcePrivate struct {
 	Client *clientTLS
 }
 
-type Info struct {
+type PrivateInfo struct {
 	Success int `json:"success"`
 	Return InfoReturn `json:"return"`
 	Error string `json:"error"`
@@ -132,7 +132,7 @@ func NewPrivate(public string, private string) *btcePrivate {
 }
 
 
-func (this *btcePrivate) GetInfo() (*Info, error) {
+func (this *btcePrivate) GetInfo() (*PrivateInfo, error) {
 	data := url.Values{};
 	data.Add("method", "getInfo");
 	data.Add("nonce", strconv.Itoa(int(time.Now().Unix())));
@@ -145,12 +145,12 @@ func (this *btcePrivate) GetInfo() (*Info, error) {
 	if err != nil {
 		return nil, err;
 	}
-	Info := new(Info);
-	err = json.Unmarshal([]byte(body), &Info);
+	PrivateInfo := new(PrivateInfo);
+	err = json.Unmarshal([]byte(body), &PrivateInfo);
 	if err != nil {
 		return nil, err;
 	}
-	return Info, nil;
+	return PrivateInfo, nil;
 }
 
 func (this *btcePrivate) TransHistory(From int, Count int, FromID int, EndID int, Order string, Since string, End string) (*TransHistory, error) {

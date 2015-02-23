@@ -13,10 +13,13 @@ const (
 func main() {
 	btce := btce.New(KEY, SECRET);
 
-	Trades, err := btce.Trades("btc_usd");
+	Trades, err := btce.Trades("btc_eur");
 	if err != nil {
+
 		fmt.Printf("Trades: %v\n", err);
 	} else {
-		fmt.Printf("Trades: %#v\n", Trades);
+		for _, value := range (*Trades)["btc_eur"] {
+			fmt.Printf("%#v\n", value);
+		}
 	}
 }

@@ -13,10 +13,10 @@ const (
 func main() {
 	btce := btce.New(KEY, SECRET);
 
-	ticker, err := btce.Ticker("ltc_btc");
+	ticker, err := btce.Ticker("btc_eur");
 	if err != nil {
 		fmt.Printf("Ticker: %v\n", err);
 	} else {
-		fmt.Printf("Ticker: %#v\n", ticker);
+		fmt.Printf("Ticker: %#v\n", (*ticker)["btc_eur"]);
 	}
 }

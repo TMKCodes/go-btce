@@ -13,19 +13,19 @@ const (
 func main() {
 	btce := btce.New(KEY, SECRET);
 
-	ticker, err := btce.Depth("ltc_btc");
+	ticker, err := btce.Depth("btc_eur");
 	if err != nil {
 		fmt.Printf("Ticker: %v\n", err);
 	} else {
 		askVolume := 0.0;
-		for i := range ticker.Asks {
-			askVolume += ticker.Asks[i][1];
+		for _, value := range (*ticker)["btc_eur"].Asks {
+			askVolume += value[1];
 		}
-		fmt.Printf("Ask volume: %v LTC\n", askVolume);
+		fmt.Printf("Ask volume: %v BTC\n", askVolume);
 		bidVolume := 0.0;
-		for i := range ticker.Bids {
-			bidVolume += ticker.Bids[i][1];
+		for _, value := range (*ticker)["btc_eur"].Bids {
+			bidVolume += value[1];
 		}
-		fmt.Printf("Bid volume: %v LTC\n", bidVolume);
+		fmt.Printf("Bid volume: %v BTC\n", bidVolume);
 	}
 }

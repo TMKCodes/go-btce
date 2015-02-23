@@ -16,9 +16,13 @@ func main() {
 	if err != nil {
 		fmt.Printf("Depth: %v\n", err);
 	} else {
-		fmt.Printf("Ask rate: %v\n", Depth.Asks[0][0]);
-		fmt.Printf("Ask amount: %v\n", Depth.Asks[0][1]);
-		fmt.Printf("Bid rate: %v\n", Depth.Bids[0][0]);
-		fmt.Printf("Bid amount: %v\n", Depth.Bids[0][1]);
+		fmt.Printf("Asks:\n");
+		for _, value := range (*Depth)["btc_eur"].Asks {
+			fmt.Printf("%v\n", value);
+		}
+		fmt.Printf("Bids:\n");
+		for _, value := range (*Depth)["btc_eur"].Bids {
+			fmt.Printf("%v\n", value);
+		}
 	}
 }

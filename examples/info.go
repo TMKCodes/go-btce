@@ -12,10 +12,16 @@ const (
 
 func main() {
 	btce := btce.New(KEY, SECRET);
-	Info, err := btce.GetInfo();
+	PublicInfo, err := btce.Info();
 	if err != nil {
 		fmt.Printf("Info: %v\n", err);
 	} else {
-		fmt.Printf("Info: %#v\n", Info);
+		fmt.Printf("Info: %#v\n", PublicInfo);
+	}
+	PrivateInfo, err := btce.GetInfo();
+	if err != nil {
+		fmt.Printf("Info: %v\n", err);
+	} else {
+		fmt.Printf("Info: %#v\n", PrivateInfo);
 	}
 }

@@ -11,7 +11,7 @@ func New(public string, secret string) *Btce {
 	return &Btce{pub, priv};
 }
 
-func (this *Btce) GetInfo() (*Info, error) {
+func (this *Btce) GetInfo() (*PrivateInfo, error) {
 	return this.Private.GetInfo();
 }
 
@@ -51,8 +51,8 @@ func (this *Btce) Balances(Pair string) ([]float64, error) {
 	return this.Private.Balances(Pair);
 }
 
-func (this *Btce) Fee(Pair string) (*Fee, error) {
-	return this.Public.Fee(Pair);
+func (this *Btce) Info() (*PublicInfo, error) {
+	return this.Public.Info();
 }
 
 func (this *Btce) Ticker(Pair string) (*Ticker, error) {

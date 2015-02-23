@@ -28,17 +28,17 @@ SECRET = "4a720e1de1ba08bec388209996df8141e48813c57dbc12425985eebf3e8e3b87"
 )
 func main() {
 	btce := btce.New(KEY, SECRET);
-	fee, err := btce.Fee("btc_usd");
+	PublicInfo, err := btce.Info("btc_usd");
 	if err != nil {
-		fmt.Printf("Fee: %v\n", err);
+		fmt.Printf("Info: %v\n", err);
 	} else {
-		fmt.Printf("Fee: %#v\n", fee);
+		fmt.Printf("Info: %#v\n", Info);
 	}
-	ticker, err := btce.Ticker("btc_usd");
+	Ticker, err := btce.Ticker("btc_usd");
 	if err != nil {
 		fmt.Printf("Ticker: %v\n", err);
 	} else {
-		fmt.Printf("Ticker: %#v\n", ticker);
+		fmt.Printf("Ticker: %#v\n", Ticker);
 	}
 	Trades, err := btce.Trades("btc_usd");
 	if err != nil {
@@ -52,11 +52,11 @@ func main() {
 	} else {
 		fmt.Printf("Depth: %#v\n", Depth);
 	}
-	Info, err := btce.GetInfo();
+	PrivateInfo, err := btce.GetInfo();
 	if err != nil {
 		fmt.Printf("Info: %v\n", err);
 	} else {
-		fmt.Printf("Info: %#v\n", Info);
+		fmt.Printf("Info: %#v\n", PrivateInfo);
 	}
 	TransHistory, err := btce.TransHistory(0, 1000, 0, 0, "ASC", "", "");
 	if err != nil {

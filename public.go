@@ -7,49 +7,58 @@ import (
 )
 
 const (
-	PUBLIC_API_ENDPOINT = "https://btc-e.com/api/2/";
+	PUBLIC_API_ENDPOINT = "https://btc-e.com/api/3/";
 )
 
 type btcePublic struct {
 	Client *clientTLS
 }
 
-type Fee struct {
-	Trade float64 `json:"trade"`
+type PublicInfo struct {
+	ServerTime float64 `json:"server_time"`
+	Pairs map[string] InfoPair `json:"pairs"`
 }
 
-type tmpTicker struct {
-	Ticker Ticker `json:"ticker"`
+type InfoPair struct {
+	DecimalPlaces int `json:"decimal_places"`
+	MinPrice float64 `json:"min_price"`
+	MaxPrice float64 `json:"max_price"`
+	MinAmount float64 `json:"min_amount"`
+	Hidden int `json:"hidden"`
+	Fee int `json:"fee"`
 }
 
-type Ticker struct {
+type Ticker map[string] TickerPair;
+
+type TickerPair struct {
 	High float64 `json:"high"`
 	Low float64 `json:"low"`
-	Avg float64 `json:"avg"`
+	AVG float64 `json:"avg"`
 	Vol float64 `json:"vol"`
 	VolCur float64 `json:"vol_cur"`
 	Last float64 `json:"last"`
 	Buy float64 `json:"buy"`
 	Sell float64 `json:"sell"`
 	Updated int `json:"updated"`
-	ServerTime int `json:"server_time"`
 }
 
-type Trades []TradesTrade;
+type Depth map[string] DepthPair;
 
-type TradesTrade struct {
-	Date int `json:"data"`
+type DepthPair struct {
+	Asks [][]float64 `json:"asks"`
+	Bids [][]float64 `json:"bids"`
+}
+
+type Trades map[string] TradesPair;
+
+type TradesPair []TradesPairTrade;
+
+type TradesPairTrade struct {
+	Type string `json:"type"`
 	Price float64 `json:"price"`
 	Amount float64 `json:"amount"`
 	TID int `json:"tid"`
-	PriceCurrency string `json:"price_currency"`
-	Item string `json:"item"`
-	TradeType string `json:"trade_type"`
-}
-
-type Depth struct {
-	Asks [][]float64 `json:"asks"`
-	Bids [][]float64 `json:"bids"`
+	Timestamp int `json:"timestamp"` 
 }
 
 func NewPublic() *btcePublic {
@@ -57,10 +66,9 @@ func NewPublic() *btcePublic {
 	return &btcePublic{client};
 }
 
-
-func (this *btcePublic) Fee(pair string) (*Fee, error) {
+func (this *btcePublic) Info() (*PublicInfo, error) {
 	data := url.Values{};
-	location := PUBLIC_API_ENDPOINT + pair + "/fee";
+	location := PUBLIC_API_ENDPOINT + "/info";
 	response, err := this.Client.Request(data, location);
 	if err != nil {
 		return nil, err;
@@ -70,17 +78,18 @@ func (this *btcePublic) Fee(pair string) (*Fee, error) {
 	if err != nil {
 		return nil, err;
 	}
-	Fee := new(Fee);
-	err = json.Unmarshal([]byte(body), &Fee);
+	Info := new(PublicInfo);
+	err = json.Unmarshal([]byte(body), &Info);
 	if err != nil {
 		return nil, err;
 	}
-	return Fee, nil;
+	return Info, nil;
 }
+
 
 func (this *btcePublic) Ticker(pair string) (*Ticker, error) {
 	data := url.Values{};
-	location := PUBLIC_API_ENDPOINT + pair + "/ticker";
+	location := PUBLIC_API_ENDPOINT + "ticker/" + pair;
 	response, err := this.Client.Request(data, location);
 	if err != nil {
 		return nil, err;
@@ -90,38 +99,17 @@ func (this *btcePublic) Ticker(pair string) (*Ticker, error) {
 	if err != nil {
 		return nil, err;
 	}
-	tmpTicker := new(tmpTicker);
-	err = json.Unmarshal([]byte(body), &tmpTicker);
+	Ticker := new(Ticker);
+	err = json.Unmarshal([]byte(body), &Ticker);
 	if err != nil {
 		return nil, err;
 	}
-	return &tmpTicker.Ticker, nil;
-}
-
-
-func (this *btcePublic) Trades(pair string) (*Trades, error) {
-	data := url.Values{};
-	location := PUBLIC_API_ENDPOINT + pair + "/trades";
-	response, err := this.Client.Request(data, location);
-	if err != nil {
-		return nil, err;
-	}
-	defer response.Body.Close();
-	body, err := ioutil.ReadAll(response.Body);
-	if err != nil {
-		return nil, err;
-	}
-	Trades := new(Trades);
-	err = json.Unmarshal([]byte(body), &Trades);
-	if err != nil {
-		return nil, err;
-	}
-	return Trades, nil;
+	return Ticker, nil;
 }
 
 func (this *btcePublic) Depth(pair string) (*Depth, error) {
 	data := url.Values{};
-	location := PUBLIC_API_ENDPOINT + pair + "/depth";
+	location := PUBLIC_API_ENDPOINT + "depth/" + pair;
 	response, err := this.Client.Request(data, location);
 	if err != nil {
 		return nil, err;
@@ -139,4 +127,23 @@ func (this *btcePublic) Depth(pair string) (*Depth, error) {
 	return Depth, nil;
 }
 
+func (this *btcePublic) Trades(pair string) (*Trades, error) {
+	data := url.Values{};
+	location := PUBLIC_API_ENDPOINT + "trades/" + pair;
+	response, err := this.Client.Request(data, location);
+	if err != nil {
+		return nil, err;
+	}
+	defer response.Body.Close();
+	body, err := ioutil.ReadAll(response.Body);
+	if err != nil {
+		return nil, err;
+	}
+	Trades := new(Trades);
+	err = json.Unmarshal([]byte(body), &Trades);
+	if err != nil {
+		return nil, err;
+	}
+	return Trades, nil;
+}
 
